@@ -1,0 +1,54 @@
+# 云购生活新零售企业级数据仓库 —— 第1周 环境编排
+# Hive(含 Metastore) + MySQL 容器化部署
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  hive-metastore:
+    image: apache/hive:4.0.0
+    container_name: hive-metastore
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SERVICE_NAME: metastore
+      HIVE_CUSTOM_CONF_DIR: /opt/hive/custom
+    volumes:
+      - ./hive-conf:/opt/hive/custom:ro
+      - ./hive-data:/opt/hive/data
+    ports:
+      - "9083:9083"
+
+  hive-server:
+    image: apache/hive:4.0.0
+    container_name: hive-server
+    depends_on:
+      - hive-metastore
+    environment:
+      SERVICE_NAME: hiveserver2
+      HIVE_CUSTOM_CONF_DIR: /opt/hive/custom
+    volumes:
+      - ./hive-conf:/opt/hive/custom:ro
+      - ./hive-data:/opt/hive/data
+      - ./data:/data
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+
+volumes:
+  mysql-data:
