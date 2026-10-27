@@ -1,7 +1,5 @@
 # 云购生活新零售企业级数据仓库 —— 第1周 环境编排
 # Hive(含 Metastore) + MySQL 容器化部署
-version: "3.8"
-
 services:
   mysql:
     image: mysql:8.0
@@ -9,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -27,10 +25,12 @@ services:
         condition: service_healthy
     environment:
       SERVICE_NAME: metastore
+      DB_DRIVER: mysql
       HIVE_CUSTOM_CONF_DIR: /opt/hive/custom
     volumes:
       - ./hive-conf:/opt/hive/custom:ro
       - ./hive-data:/opt/hive/data
+      - ./hive-lib/mysql-connector-j-8.0.33.jar:/opt/hive/lib/mysql-connector-j-8.0.33.jar:ro
     ports:
       - "9083:9083"
 
@@ -41,13 +41,15 @@ services:
       - hive-metastore
     environment:
       SERVICE_NAME: hiveserver2
+      DB_DRIVER: mysql
       HIVE_CUSTOM_CONF_DIR: /opt/hive/custom
     volumes:
       - ./hive-conf:/opt/hive/custom:ro
       - ./hive-data:/opt/hive/data
       - ./data:/data
+      - ./hive-lib/mysql-connector-j-8.0.33.jar:/opt/hive/lib/mysql-connector-j-8.0.33.jar:ro
     ports:
-      - "10000:10000"
+      - "10001:10000"
       - "10002:10002"
 
 volumes:

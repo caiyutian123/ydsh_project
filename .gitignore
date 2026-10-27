@@ -19,3 +19,9 @@ node_modules/
 
 # ---- Hive 运行数据（本地文件系统） ----
 hive-data/
+
+# ---- docs 目录下的排障临时文件 ----
+docs/*.txt
+docs/*.ps1
+docs/*.png
+docs/*.json
