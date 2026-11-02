@@ -55,6 +55,26 @@ Apache Hive / MySQL / ClickHouse(可选) / Python / 大模型API / Apache Supers
 
 > AI 协同日志为每周必交项，本周共记录 9 条（≥ 5 条要求），涵盖环境排障、ODS 导入、质量扫描、清洗脚本与 Git 规范。
 
+## 五之二、第 2 周任务与交付物
+1. 枚举值标准化：gender / member_level / pay_type / order_status / channel / behavior_type 六字段统一规范值域。
+2. 异常值处理：age、pay_amount、discount_amount、quantity、unit_price 按业务规则修复或剔除。
+3. 格式标准化：日期统一 yyyy-MM-dd、手机号去分隔符、行为时间补秒；字段拆分合并（order_timestamp、region）与编码映射（dim_member_level、dim_pay_type）。
+4. 数据质量对比：输出清洗前后五类问题对比与修复率。
+5. 四层架构设计：ODS → DWD → DWS → ADS，含架构图、星型模型与命名规范。
+6. DWD 维度建模与 ETL：4 张维度表 + 3 张事实表（分区 / 分桶 / ORC），加载验证。
+
+### 交付物清单（第 2 周）
+| 序号 | 交付物 | 类型 | 位置 |
+|------|--------|------|------|
+| 1 | 枚举标准化 / 异常格式 / 合并映射脚本 | 代码 | sql/clean/02~04 |
+| 2 | 数据质量清洗报告（实跑修复率 100%） | 文档 | docs/数据质量清洗报告.md |
+| 3 | 数仓架构设计文档 | 文档 | docs/数仓架构设计文档.md |
+| 4 | DWD 建模 DDL 与 ETL 脚本 | 代码 | sql/dwd/create_dwd.sql、load_dwd.sql |
+| 5 | 探索性分析简报与分析脚本 | 文档+代码 | docs/探索性分析简报.md、sql/eda/eda.sql |
+| 6 | 按子任务独立 Git 提交 | 提交历史 | 本仓库 main 分支 |
+
+> 第 2 周关键实跑结果：dwd_order 14,701 行（366 个日期分区）、dwd_order_item 36,831 行（8 桶 ORC）、dwd_user_behavior 60,000 行（184 个分区）；GMV 14,080,319.42 元、已完成订单 5,564 单、客单价 2,530.61 元。
+
 ## 六、阶段计划
 | 周次 | 主题 | 主要产出 |
 |------|------|----------|
