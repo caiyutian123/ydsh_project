@@ -62,4 +62,35 @@
     <name>hive.support.concurrency</name>
     <value>false</value>
   </property>
+  <!-- 元数据客户端超时调大（默认 60s，批量 DDL 时易触发 Read timed out） -->
+  <property>
+    <name>hive.metastore.client.socket.timeout</name>
+    <value>600</value>
+  </property>
+  <!-- 关闭 DDL 自动收集统计信息，避免每次 CTAS 写 MySQL 统计表拖慢元数据服务 -->
+  <property>
+    <name>hive.stats.autogather</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>hive.stats.column.autogather</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>datanucleus.connectionPoolingType</name>
+    <value>DBCP</value>
+  </property>
+  <!-- 动态分区上限（订单/行为按日期分区，默认 100 不够） -->
+  <property>
+    <name>hive.exec.max.dynamic.partitions</name>
+    <value>2000</value>
+  </property>
+  <property>
+    <name>hive.exec.max.dynamic.partitions.pernode</name>
+    <value>2000</value>
+  </property>
+  <property>
+    <name>hive.exec.dynamic.partition.mode</name>
+    <value>nonstrict</value>
+  </property>
 </configuration>
